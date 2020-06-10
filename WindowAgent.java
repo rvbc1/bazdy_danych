@@ -11,7 +11,7 @@ public class WindowAgent extends JFrame implements Runnable{
     }
 
     public void init() {
-        setTitle("Hello World");
+        setTitle("Agent");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setVisible(true);
@@ -36,14 +36,31 @@ public class WindowAgent extends JFrame implements Runnable{
         JButton search_polisy_agenta = new JButton("moje polisy");
         search_polisy_agenta.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Window.tableGUI(Base.searchPolisyAgenta(agent_id), "Polisy klienta " + Window.wyszukane_imie + " " + Window.wyszukane_nazwisko);
+                Window.tableGUI(Base.searchPolisyAgenta(agent_id), "Polisy agenta");
             }
         });
+
+        JButton add_klient = new JButton("dodaj klienta");
+        add_klient.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Window.addKlientForm();
+            }
+        });
+
+        JButton add_polisa = new JButton("dodaj polise");
+        add_polisa.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Window.addPolisaForm(Window.searchKlientForm(), agent_id);
+            }
+        });
+
 
 
         panel.add(search_button);
         panel.add(search_polisy);
         panel.add(search_polisy_agenta);
+        panel.add(add_klient);
+        panel.add(add_polisa);
     }
 
     public WindowAgent(int id) {

@@ -11,7 +11,7 @@ public class WindowTU  extends JFrame implements Runnable{
     }
 
     public void init() {
-        setTitle("Hello World");
+        setTitle("TU");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setVisible(true);
@@ -36,14 +36,21 @@ public class WindowTU  extends JFrame implements Runnable{
         JButton search_polisy_agenta = new JButton("moje polisy");
         search_polisy_agenta.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Window.tableGUI(Base.searchPolisyTU(tu_regon), "Polisy klienta " + Window.wyszukane_imie + " " + Window.wyszukane_nazwisko);
+                Window.tableGUI(Base.searchPolisyTU(tu_regon), "Polisy TU");
             }
         });
 
-        JButton search_agents = new JButton("szukaj Agentów");
+        JButton search_agents = new JButton("wyświetl Agentów");
         search_agents.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 Window.tableGUI(Base.searchAgenciTUWithId(tu_regon), "Agenci " + Window.wyszukane_tu);
+            }
+        });
+
+        JButton add_agent = new JButton("dodaj agenta");
+        add_agent.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Window.addAgentForm(tu_regon);
             }
         });
 
@@ -52,6 +59,7 @@ public class WindowTU  extends JFrame implements Runnable{
         panel.add(search_polisy);
         panel.add(search_polisy_agenta);
         panel.add(search_agents);
+        panel.add(add_agent);
     }
 
     public WindowTU(long regon) {

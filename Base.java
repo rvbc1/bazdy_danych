@@ -26,6 +26,117 @@ public class Base {
       //  searchKlientForm();
     }
 
+    public static int addAdres(String ulica, String miejscowosc, String kod){
+        int id = 1;
+        String query = "SELECT MAX(id) " +
+        "FROM Adres;";
+        ResultSet rs = SQL.exe(query);
+        try {
+            if (rs.next()) {
+                id = rs.getInt(1) + 1;
+            }
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+
+        String update = "INSERT INTO Adres "
+        + "(id, ulica, miejscowosc, kod)"
+        + "VALUES "
+        + "('" + id + "', '" + ulica + "', '" + miejscowosc + "', '" + kod + "');";
+        SQL.update(update);
+        return id;
+    }
+
+    public static int addDanePers(String imie, String nazwisko){
+        int id = 1;
+        String query = "SELECT MAX(id) " +
+        "FROM Dane_Pers;";
+        ResultSet rs = SQL.exe(query);
+        try {
+            if (rs.next()) {
+                id = rs.getInt(1) + 1;
+            }
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+
+        String update = "INSERT INTO Dane_Pers "
+        + "(id, imie, nazwisko)"
+        + "VALUES "
+        + "('" + id + "', '" + imie + "', '" + nazwisko + "');";
+        SQL.update(update);
+        return id;
+    }
+
+    public static void addKlient(long pesel, int dane_pers_id, int adres_id){
+        String update = "INSERT INTO Klient "
+        + "(pesel, dane_pers_id, adres_id)"
+        + "VALUES "
+        + "('" + pesel + "', '" + dane_pers_id + "', '" + adres_id + "');";
+        SQL.update(update);
+    }
+
+    public static int addAgent(long tu_regon, int dane_pers_id, int adres_id){
+        int id = 1;
+        String query = "SELECT MAX(id) " +
+        "FROM Agent;";
+        ResultSet rs = SQL.exe(query);
+        try {
+            if (rs.next()) {
+                id = rs.getInt(1) + 1;
+            }
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        String update = "INSERT INTO Agent "
+        + "(id, tu_regon, dane_pers_id, adres_id)"
+        + "VALUES "
+        + "('" + id + "', '" + tu_regon + "', '" + dane_pers_id + "', '" + adres_id + "');";
+        SQL.update(update);
+        return id;
+    }
+
+    public static int addPolisa(long klient_pesel, int agent_id, String nazwa, int rodzaj_id, float cena, String start, String koniec){
+        int id = 1;
+        long tu_regon = -1;
+        String query = "SELECT MAX(id) " +
+        "FROM Polisa;";
+        ResultSet rs = SQL.exe(query);
+        try {
+            if (rs.next()) {
+                id = rs.getInt(1) + 1;
+            }
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        query = "SELECT Agent.tu_regon " +
+        "FROM Agent WHERE Agent.id=" + agent_id + ";";
+        rs = SQL.exe(query);
+        try {
+            if (rs.next()) {
+                tu_regon = rs.getLong(1);
+            }
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        String update = "INSERT INTO Polisa "
+        + "(id, klient_pesel, agent_id, tu_regon, nazwa, polisa_rodzaj_id, cena, start, koniec)"
+        + "VALUES "
+        + "('" + id + "', '" + klient_pesel + "', '" + agent_id + "', '" + tu_regon + "', '" + nazwa + "', '" + rodzaj_id + "', '" + cena + "', '" + start + "', '" + koniec + "');";
+        SQL.update(update);
+        return id;
+    }
+
     public static ResultSet searchKlient(long pesel){
         String querry = "SELECT " +
             "*" +

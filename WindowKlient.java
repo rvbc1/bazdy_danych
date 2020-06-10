@@ -11,7 +11,7 @@ public class WindowKlient extends JFrame implements Runnable {
     }
 
     public void init() {
-        setTitle("Hello World");
+        setTitle("Klient");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setVisible(true);

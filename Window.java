@@ -19,7 +19,7 @@ public class Window extends JFrame implements Runnable {
     }
 
     public void init() {
-        setTitle("Hello World");
+        setTitle("Polisy");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setVisible(true);
@@ -175,7 +175,7 @@ public class Window extends JFrame implements Runnable {
         adres_miejscowosc_field.setEditable(false);
         adres_kod_field.setEditable(false);
 
-        JButton search_button = new JButton("szukaj");
+        JButton search_button = new JButton("Szukaj Agenta");
         search_button.addActionListener(new ActionListener() { 
             public void actionPerformed(ActionEvent e) { 
                 if(id_field.getText().length() > 0 ){
@@ -255,7 +255,7 @@ public class Window extends JFrame implements Runnable {
         adres_miejscowosc_field.setEditable(false);
         adres_kod_field.setEditable(false);
 
-        JButton search_button = new JButton("szukaj");
+        JButton search_button = new JButton("Szukaj TU");
         search_button.addActionListener(new ActionListener() { 
             public void actionPerformed(ActionEvent e) { 
                 if(regon_field.getText().length() > 0 ){
@@ -366,5 +366,171 @@ public class Window extends JFrame implements Runnable {
 
         return new DefaultTableModel(data, columnNames);
 
+    }
+
+    public static long addKlientForm(){
+        JTextField pesel_field = new JTextField();
+
+        JTextField imie_field = new JTextField();
+        JTextField nazwisko_field = new JTextField();
+        JTextField adres_ulica_field = new JTextField();
+        JTextField adres_miejscowosc_field = new JTextField();
+        JTextField adres_kod_field = new JTextField();
+
+        JButton search_button = new JButton("Dane klienta");
+        search_button.addActionListener(new ActionListener() { 
+            public void actionPerformed(ActionEvent e) { 
+                if(pesel_field.getText().length() > 0 ){
+                    try {
+                    long klient_pesel = Long.parseLong(pesel_field.getText());
+                    ResultSet rs_klient = Base.searchKlient(klient_pesel);
+                        if(rs_klient.next()){
+                            int dane_pers_id = rs_klient.getInt("dane_pers_id");
+                            int adres_id = rs_klient.getInt("adres_id");
+                            ResultSet rs_dane_pers = Base.searchDanePersonalne(dane_pers_id);
+                            if(rs_dane_pers.next()){
+                                imie_field.setText(rs_dane_pers.getString("imie"));
+                                nazwisko_field.setText(rs_dane_pers.getString("nazwisko"));
+                            }
+
+                            ResultSet rs_adres = Base.searchAdres(adres_id);
+                            if(rs_adres.next()){
+                                adres_ulica_field.setText(rs_adres.getString("ulica"));
+                                adres_miejscowosc_field.setText(rs_adres.getString("miejscowosc"));
+                                adres_kod_field.setText(rs_adres.getString("kod"));
+                            }
+                        }
+                    } catch (SQLException e1) {
+                        // TODO Auto-generated catch block
+                        e1.printStackTrace();
+                    } catch (NumberFormatException e2){
+                        //e2.printStackTrace();
+                    }
+                }
+            } 
+          } );
+
+        JPanel panel = new JPanel(new GridLayout(0, 1));
+      //  panel.add(combo);
+        panel.add(new JLabel("Pesel:"));
+        panel.add(pesel_field);
+        panel.add(search_button);
+        panel.add(new JLabel("Imie:"));
+        panel.add(imie_field);
+        panel.add(new JLabel("Nazwisko:"));
+        panel.add(nazwisko_field);
+        panel.add(new JLabel("Adres:"));
+        panel.add(new JLabel("ulica:"));
+        panel.add(adres_ulica_field);
+        panel.add(new JLabel("miejscowosc:"));
+        panel.add(adres_miejscowosc_field);
+        panel.add(new JLabel("kod:"));
+        panel.add(adres_kod_field);
+
+       int result = JOptionPane.showConfirmDialog(null, panel, "Szukaj Klienta",
+            JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        if (result == JOptionPane.OK_OPTION) {
+            if(pesel_field.getText().length() > 0 && imie_field.getText().length() > 0 && nazwisko_field.getText().length() > 0
+                && adres_ulica_field.getText().length() > 0 && adres_miejscowosc_field.getText().length() > 0 && adres_kod_field.getText().length() > 0) {
+                
+                Base.addKlient(Long.parseLong(pesel_field.getText()),
+                Base.addDanePers(imie_field.getText(), nazwisko_field.getText()),
+                Base.addAdres(adres_ulica_field.getText(), adres_miejscowosc_field.getText(), adres_kod_field.getText()));
+
+                wyszukane_imie = imie_field.getText();
+                wyszukane_nazwisko = nazwisko_field.getText();
+                return Long.parseLong(pesel_field.getText());
+            } else
+                return -1;
+        } else {
+            System.out.println("Cancelled");
+            return -1;
+        }
+    }
+
+    public static long addAgentForm(long tu_regon){
+
+        JTextField imie_field = new JTextField();
+        JTextField nazwisko_field = new JTextField();
+        JTextField adres_ulica_field = new JTextField();
+        JTextField adres_miejscowosc_field = new JTextField();
+        JTextField adres_kod_field = new JTextField();
+
+
+        JPanel panel = new JPanel(new GridLayout(0, 1));
+      //  panel.add(combo);
+        panel.add(new JLabel("Imie:"));
+        panel.add(imie_field);
+        panel.add(new JLabel("Nazwisko:"));
+        panel.add(nazwisko_field);
+        panel.add(new JLabel("Adres:"));
+        panel.add(new JLabel("ulica:"));
+        panel.add(adres_ulica_field);
+        panel.add(new JLabel("miejscowosc:"));
+        panel.add(adres_miejscowosc_field);
+        panel.add(new JLabel("kod:"));
+        panel.add(adres_kod_field);
+
+       int result = JOptionPane.showConfirmDialog(null, panel, "Dane Agenta",
+            JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        if (result == JOptionPane.OK_OPTION) {
+            if(imie_field.getText().length() > 0 && nazwisko_field.getText().length() > 0
+                && adres_ulica_field.getText().length() > 0 && adres_miejscowosc_field.getText().length() > 0 && adres_kod_field.getText().length() > 0) {
+                
+                int id = Base.addAgent(tu_regon,
+                    Base.addDanePers(imie_field.getText(), nazwisko_field.getText()),
+                    Base.addAdres(adres_ulica_field.getText(), adres_miejscowosc_field.getText(), adres_kod_field.getText()));
+
+                wyszukane_imie = imie_field.getText();
+                wyszukane_nazwisko = nazwisko_field.getText();
+                return id;
+            } else
+                return -1;
+        } else {
+            System.out.println("Cancelled");
+            return -1;
+        }
+    }
+
+    public static long addPolisaForm(long klient_pesel, int agent_id){
+        String[] polisa_rodzaj = { "OC Auto", "OC+AC Auto", "DOM", "OC zawodowe", "Zdrowotne" };
+        JComboBox polisaList = new JComboBox(polisa_rodzaj);
+
+        JTextField nazwa_field = new JTextField();
+        JTextField start_field = new JTextField();
+        JTextField koniec_field = new JTextField();
+
+        SpinnerModel model = new SpinnerNumberModel(999.99, 0.01, 10000, 0.01);     
+        JSpinner spinner = new JSpinner(model);
+
+
+        JPanel panel = new JPanel(new GridLayout(0, 1));
+      //  panel.add(combo);
+        panel.add(new JLabel("Nazwa:"));
+        panel.add(nazwa_field);
+        panel.add(new JLabel("Rodzaj:"));
+        panel.add(polisaList);
+        panel.add(new JLabel("Początek RRRR-MM-DD:"));
+        panel.add(start_field);
+        panel.add(new JLabel("Koniec RRRR-MM-DD:"));
+        panel.add(koniec_field);
+        panel.add(new JLabel("cena:"));
+        panel.add(spinner);
+
+       int result = JOptionPane.showConfirmDialog(null, panel, "Dane Polisy",
+            JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        if (result == JOptionPane.OK_OPTION) {
+            if(nazwa_field.getText().length() > 0 && start_field.getText().length() > 0 && 
+                koniec_field.getText().length() > 0) {
+                
+                int id = Base.addPolisa(klient_pesel, agent_id, nazwa_field.getText(), polisaList.getSelectedIndex() + 1, ((Double)spinner.getValue()).floatValue(), start_field.getText(), koniec_field.getText());
+
+                return id;
+            } else
+                return -1;
+        } else {
+            System.out.println("Cancelled");
+            return -1;
+        }
     }
 }
