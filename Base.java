@@ -5,25 +5,8 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class Base {
-
-    private void createTables() {
-        String agent = "CREATE TABLE IF NOT EXISTS Agent( " 
-            + "tutorial_id INT NOT NULL AUTO_INCREMENT, "
-            + "tutorial_title VARCHAR(100) NOT NULL, " 
-            + "tutorial_author VARCHAR(40) NOT NULL, "
-            + "submission_date DATE, " 
-            + "PRIMARY KEY ( tutorial_id )); ";
-        SQL.update(agent);
-    }
-
     Base() {
         SQL.open();
-        String query = "INSERT INTO Agent "
-        + "(tu_id, dane_pers_id, adres_id)"
-        + "VALUES "
-        + "('1', '1', '1');";
-        //SQL.update(query);
-      //  searchKlientForm();
     }
 
     public static int addAdres(String ulica, String miejscowosc, String kod){

@@ -317,7 +317,6 @@ public class Window extends JFrame implements Runnable {
             polsy_window.setTitle(title);
 
             polsy_window.setSize(800, 150);
-            //polsy_window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             
             try {
                 JTable table = new JTable(buildTableModel(rs));
@@ -332,8 +331,6 @@ public class Window extends JFrame implements Runnable {
             }
             
 
-
-            //add(scrollPane, BorderLayout.CENTER);
 
 
             polsy_window.setLocationRelativeTo(null);
