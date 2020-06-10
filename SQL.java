@@ -45,7 +45,7 @@ public class SQL
 		try {
             if(s == null){
                 open();
-            }
+			}
 			s.executeUpdate(sql);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
