@@ -53,7 +53,7 @@ public class Window extends JFrame implements Runnable {
             }
         });
 
-        JButton tu = new JButton("tu");
+        JButton tu = new JButton("TU");
         tu.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 //tableGUI(Base.searchAgenciTU(searchTUForm()), "Agenci " + wyszukane_tu);

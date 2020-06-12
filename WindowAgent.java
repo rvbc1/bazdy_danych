@@ -29,7 +29,7 @@ public class WindowAgent extends JFrame implements Runnable{
         JButton search_polisy = new JButton("polisy Klienta");
         search_polisy.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Window.tableGUI(Base.searchPolisyKlienta(Window.searchKlientForm()), "Polisy klienta " + Window.wyszukane_imie + " " + Window.wyszukane_nazwisko);
+                Window.tableGUI(Base.searchPolisyKlientaTU(Window.searchKlientForm(), Base.searchAgentTU(agent_id)), "Polisy klienta " + Window.wyszukane_imie + " " + Window.wyszukane_nazwisko);
             }
         });
 

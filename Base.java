@@ -207,7 +207,7 @@ public class Base {
             String querry = "SELECT " +
                 "Polisa.nazwa AS Opis, Polisa_Rodzaj.rodzaj AS Rodzaj, " +
                 "concat(Dane_Pers.imie, ' ', Dane_Pers.nazwisko) AS Agent, " +
-                "TU.nazwa AS Ubezpieczyciel , Polisa.cena AS \"Cena [z≈Ç]\", Polisa.start AS Od, Polisa.koniec AS Do" +
+                "TU.nazwa AS Ubezpieczyciel , Polisa.cena AS \"Cena [z≥Ç]\", Polisa.start AS Od, Polisa.koniec AS Do" +
                 " FROM " +
                 "Polisa" +
                 " INNER JOIN Polisa_Rodzaj ON Polisa.polisa_rodzaj_id = Polisa_Rodzaj.id" +
@@ -220,13 +220,34 @@ public class Base {
         }
         return null;
     }
+    
+    public static ResultSet searchPolisyKlientaTU(long pesel, long tu_regon){
+        if(pesel > 0){
+            String querry = "SELECT " +
+                "Polisa.nazwa AS Opis, Polisa_Rodzaj.rodzaj AS Rodzaj, " +
+                "concat(Dane_Pers.imie, ' ', Dane_Pers.nazwisko) AS Agent, " +
+                "TU.nazwa AS Ubezpieczyciel , Polisa.cena AS \"Cena [z≥Ç]\", Polisa.start AS Od, Polisa.koniec AS Do" +
+                " FROM " +
+                "Polisa" +
+                " INNER JOIN Polisa_Rodzaj ON Polisa.polisa_rodzaj_id = Polisa_Rodzaj.id" +
+                " INNER JOIN Agent ON Polisa.agent_id = Agent.id" +
+                " INNER JOIN Dane_Pers ON Agent.dane_pers_id = Dane_Pers.id" +
+                " LEFT JOIN TU ON Polisa.tu_regon = TU.regon" +
+                " WHERE " +
+                "klient_pesel='" + pesel + 
+                "' AND " +
+                "Polisa.tu_regon='" + tu_regon + "';";
+            return SQL.exe(querry);   
+        }
+        return null;
+    }
 
     public static ResultSet searchPolisyAgenta(int id){
         if(id > 0){
             String querry = "SELECT " +
                 "concat(Dane_Pers.imie, ' ', Dane_Pers.nazwisko) AS Klient, " +
                 "Polisa.nazwa AS Opis, Polisa_Rodzaj.rodzaj AS Rodzaj, " +
-                "TU.nazwa AS Ubezpieczyciel , Polisa.cena AS \"Cena [z≈Ç]\", Polisa.start AS Od, Polisa.koniec AS Do" +
+                "TU.nazwa AS Ubezpieczyciel , Polisa.cena AS \"Cena [z≥Ç]\", Polisa.start AS Od, Polisa.koniec AS Do" +
                 " FROM " +
                 "Polisa" +
                 " INNER JOIN Polisa_Rodzaj ON Polisa.polisa_rodzaj_id = Polisa_Rodzaj.id" +
@@ -245,7 +266,7 @@ public class Base {
             String querry = "SELECT " +
                 "concat(Dane_Pers.imie, ' ', Dane_Pers.nazwisko) AS Agent, " +
                 "Polisa.nazwa AS Opis, Polisa_Rodzaj.rodzaj AS Rodzaj, " +
-                "Polisa.cena AS \"Cena [z≈Ç]\", Polisa.start AS Od, Polisa.koniec AS Do" +
+                "Polisa.cena AS \"Cena [z≥Ç]\", Polisa.start AS Od, Polisa.koniec AS Do" +
                 " FROM " +
                 "Polisa" +
                 " INNER JOIN Polisa_Rodzaj ON Polisa.polisa_rodzaj_id = Polisa_Rodzaj.id" +
@@ -293,6 +314,19 @@ public class Base {
             "id=" + id + ";";
 
          return SQL.exe(querry);
+    }
+    
+    public static long searchAgentTU(int id){
+        ResultSet rs_agent = searchAgent(id);
+        try {
+			if(rs_agent.next()){
+			    return  rs_agent.getLong("tu_regon");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return -1;
     }
     
     public static void updateLoginDateKlient(long klient_pesel){
