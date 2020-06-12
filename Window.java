@@ -33,6 +33,7 @@ public class Window extends JFrame implements Runnable {
                 long pesel = searchKlientForm();
                 if(pesel > 0){
                     Window.this_pointer.dispose();
+                    Base.updateLoginDateKlient(pesel);
                     new Thread(new WindowKlient(pesel)).start();
                 }
             }
@@ -46,6 +47,7 @@ public class Window extends JFrame implements Runnable {
                 int id = searchAgentForm();
                 if(id > 0){
                     Window.this_pointer.dispose();
+                    Base.updateLoginDateAgent(id);
                     new Thread(new WindowAgent(id)).start();
                 }
             }

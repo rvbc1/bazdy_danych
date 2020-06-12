@@ -1,8 +1,9 @@
 import java.sql.*;
-import java.sql.SQLException;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.*;
 
 public class Base {
     Base() {
@@ -111,11 +112,11 @@ public class Base {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-
+        
         String update = "INSERT INTO Polisa "
-        + "(id, klient_pesel, agent_id, tu_regon, nazwa, polisa_rodzaj_id, cena, start, koniec)"
+        + "(id, klient_pesel, agent_id, tu_regon, nazwa, polisa_rodzaj_id, cena, start, koniec, data_wystawienia)"
         + "VALUES "
-        + "('" + id + "', '" + klient_pesel + "', '" + agent_id + "', '" + tu_regon + "', '" + nazwa + "', '" + rodzaj_id + "', '" + cena + "', '" + start + "', '" + koniec + "');";
+        + "('" + id + "', '" + klient_pesel + "', '" + agent_id + "', '" + tu_regon + "', '" + nazwa + "', '" + rodzaj_id + "', '" + cena + "', '" + start + "', '" + koniec + "', '" + new java.sql.Date((new java.util.Date()).getTime()) + ";');";
         SQL.update(update);
         return id;
     }
@@ -292,5 +293,42 @@ public class Base {
             "id=" + id + ";";
 
          return SQL.exe(querry);
+    }
+    
+    public static void updateLoginDateKlient(long klient_pesel){
+        ResultSet rs_klient = searchKlient(klient_pesel);
+        try {
+			if(rs_klient.next()){
+			    int dane_pers_id = rs_klient.getInt("dane_pers_id");
+			    updateLoginDate(dane_pers_id);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+    
+    public static void updateLoginDateAgent(int id_agent){
+        ResultSet rs_agent = searchAgent(id_agent);
+        try {
+			if(rs_agent.next()){
+			    int dane_pers_id = rs_agent.getInt("dane_pers_id");
+			    updateLoginDate(dane_pers_id);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+    
+    public static void updateLoginDate(int id){
+        String update = "UPDATE " +
+            "Dane_Pers" +
+            " SET " +
+            "ost_log = '" + new java.sql.Date((new java.util.Date()).getTime()) + "'" +
+            " WHERE " +
+            "id=" + id + ";";
+
+         SQL.update(update);
     }
 }
